@@ -1,17 +1,9 @@
 Voice Authenticator Web App
 
 ![alt text](https://img.shields.io/badge/Python-3.8%2B-blue.svg)
-
-
 ![alt text](https://img.shields.io/badge/Flask-2.x-green.svg)
-
-
 ![alt text](https://img.shields.io/badge/SpeechBrain-ECAPA--TDNN-orange)
-
-
 ![alt text](https://img.shields.io/badge/Docker-Ready-blue.svg)
-
-
 ![alt text](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 A web application for user authentication using voice biometrics. Built with Flask, JavaScript, and a state-of-the-art SpeechBrain model for high accuracy.
