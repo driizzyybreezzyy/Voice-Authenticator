@@ -1,0 +1,15 @@
+Flask>=2.3
+torch>=1.10 # Check SpeechBrain compatibility for specific versions
+torchaudio>=0.10
+speechbrain>=0.5.13 # Or SpeechBrain >=1.0 if it's out and stable
+soundfile>=0.12
+numpy>=1.21
+scipy>=1.7 # For cosine distance, cdist, trim_mean
+Werkzeug>=2.2 # For password hashing (not used in this voice-only version)
+Flask-CORS>=3.0
+whitenoise>=6.0
+gunicorn
+librosa 
+webrtcvad 
+# Optional: for production deployment
+# Add any specific VAD library if you choose one, e.g., webrtc-vad-python

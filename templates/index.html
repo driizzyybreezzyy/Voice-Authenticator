@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Authentication - Aggregates</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo"><i class="fas fa-user-shield"></i></div>
+            <h1>Voice Authenticator (Multi-Sample Enrollment)</h1>
+        </header>
+
+        <div class="tabs-navigation">
+            <button class="tab-btn active" data-tab="register">Register (Multi-Sample)</button>
+            <button class="tab-btn" data-tab="authenticate">Authenticate & Benchmark</button>
+            <button class="tab-btn" data-tab="users">User List</button>
+        </div>
+
+        <main class="content-area">
+            <!-- Register Tab -->
+            <div class="tab-content active" id="register-tab">
+                <div class="form-card">
+                    <h2>Register Voice (Provide at least {{ MIN_REQUIRED_ENROLLMENT_SAMPLES }} good samples)</h2>
+                    <p class="subtitle">Record or upload multiple distinct voice samples for robust enrollment.</p>
+                    <!-- MODIFICATION: Added suggestion here too -->
+                    <div class="form-group">
+                        <label for="register-name-input">Your Name</label>
+                        <input type="text" id="register-name-input" placeholder="Enter your unique name" autocomplete="name">
+                    </div>
+                    <div id="enrollment-samples-area">
+                        <p class="info-text">Click "Add Sample" to record/upload each voice snippet.</p>
+                    </div>
+                    <button id="add-enrollment-sample-btn" class="btn btn-secondary" style="width: auto; margin-top: 10px;">Add Voice Sample (<span id="samples-collected-count">0</span>)</button>
+                    <button id="register-btn" class="btn btn-primary" disabled>Register Voice Profile</button>
+                    <div id="register-result" class="result" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- Authenticate Tab -->
+            <div class="tab-content" id="authenticate-tab" style="display: none;">
+                <div class="form-card">
+                    <h2>Authenticate Your Voice (& Benchmark)</h2>
+                    <div class="form-group">
+                        <label for="auth-name-input">Your Registered Name</label>
+                        <input type="text" id="auth-name-input" placeholder="Name" autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label>Provide Your Voice</label>
+                        <div class="input-method-toggle">
+                            <button class="toggle-btn active" data-input="record" data-target="auth_single">Record</button>
+                            <button class="toggle-btn" data-input="upload" data-target="auth_single">Upload</button>
+                        </div>
+                        <div class="voice-input-area record-active" id="auth_single-input-area">
+
+                            <div class="voice-recorder">
+                                <button id="auth_single_record-btn" class="record-mic-btn"><i class="fas fa-microphone"></i></button>
+                                <p id="auth_single_record-instruction" class="record-instruction">Record Voice</p>
+                                <div id="auth_single_recording-indicator" class="recording-indicator" style="display: none;">REC</div>
+                                <div class="audio-player-container" style="display: none;">
+                                    <audio id="auth_single_audio-playback" controls></audio>
+                                </div>
+                            </div>
+                            <div class="voice-uploader" style="display: none;">
+                                <input type="file" id="auth_single_file-input" accept="audio/*" style="display:none;">
+                                <label for="auth_single_file-input" class="file-upload-label"><i class="fas fa-upload"></i> Choose File</label><span id="auth_single_file-name" class="file-name-display">No file chosen</span>
+                                <div class="audio-player-container upload-audio-player-container" style="display:none;">
+                                    <audio id="auth_single_upload-playback" controls></audio>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="authenticate-btn" class="btn btn-primary" disabled>Authenticate</button>
+                    <div id="auth-result" class="result" style="display: none;"></div>
+                    <h3 style="margin-top: 20px; text-align:center; display:none;" id="benchmark-title">Benchmark Scores:</h3>
+                    <div id="auth-benchmark-table-container" style="margin-top: 10px;"></div>
+                </div>
+            </div>
+
+            <!-- Users Tab (Same as before) -->
+            <div class="tab-content" id="users-tab" style="display: none;">
+                <div class="form-card">
+                    <h2>Registered Users</h2>
+                    <button id="refresh-users-btn" class="btn btn-secondary">Refresh List</button>
+                    <div id="users-list" class="users-list-container">
+                        <p>Loading users...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Voice Auth Aggregates © <span id="current-year">2024</span></p>
+            <button id="reset-db-btn" class="btn btn-link">Reset Database</button>
+        </footer>
+    </div>
+
+    <script>
+        const MIN_REQUIRED_ENROLLMENT_SAMPLES = parseInt("{{ MIN_REQUIRED_ENROLLMENT_SAMPLES }}") || 3;
+        const ENROLLMENT_AUDIO_DURATION_S = parseInt("{{ ENROLLMENT_AUDIO_DURATION_S }}") || 5;
+        const APP_CONFIG = {MIN_SNR_DB_THRESHOLD: parseFloat("{{ MIN_SNR_DB_THRESHOLD_CONFIG }}") || 15.0};
+    </script>
+    <script type="module" src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+.git/
+.gitignore
+.vscode/
+instance/  # We will mount this as a volume, so don't copy it into the image.
+           # If it contains default data you want in the image, comment this out.
+*.db       # Or specifically ignore your database files if not in instance/
+*.sqlite3
