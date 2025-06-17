@@ -21,24 +21,24 @@ Powerful Backend: A Flask-based server processes audio, generates embeddings, an
 Persistent Storage: User data and voice profiles are stored in an SQLite database.
 Dockerized for Easy Deployment: Includes a Dockerfile for hassle-free setup and deployment.
 Technology Stack
-Backend: Python, Flask
+**Backend: Python, Flask
 Frontend: HTML5, CSS3, JavaScript (ES6 Modules)
 Voice Biometrics: SpeechBrain, Hugging Face Transformers (speechbrain/spkrec-ecapa-voxceleb)
 Database: SQLite
-Deployment: Docker
+Deployment: Docker**
 How It Works
 The application follows a client-server architecture to provide a seamless user experience while handling complex biometric processing on the backend.
-Frontend (Client-Side): The user interacts with the index.html page. All client-side logic is handled by modular JavaScript files. audio.js uses the Web Audio API to record the user's voice, which is then sent as a blob to the backend via API calls defined in api.js.
-Backend (Server-Side): The Flask application (app.py) receives the audio data. Instead of using traditional methods, it leverages a powerful pre-trained model to create a speaker embedding.
-Advanced Voice Biometrics: SpeechBrain ECAPA-TDNN
+**Frontend (Client-Side):** The user interacts with the index.html page. All client-side logic is handled by modular JavaScript files. audio.js uses the Web Audio API to record the user's voice, which is then sent as a blob to the backend via API calls defined in api.js.
+**Backend (Server-Side):** The Flask application (app.py) receives the audio data. Instead of using traditional methods, it leverages a powerful pre-trained model to create a speaker embedding.
+**Advanced Voice Biometrics:** SpeechBrain ECAPA-TDNN
 To achieve a high level of accuracy and robustness, this project uses speechbrain/spkrec-ecapa-voxceleb, a state-of-the-art model for speaker verification. This model is based on the ECAPA-TDNN (Emphasized Channel Attention, Propagation, and Aggregation in Time Delay Neural Network) architecture.
-Why this model is used:
-Superior Accuracy: The model was trained on the massive VoxCeleb dataset. It achieves an Equal Error Rate (EER) of 0.95% on the VoxCeleb1 test set, signifying extremely high accuracy. A lower EER is better.
-Robustness: Training on diverse data makes the model resistant to variations in accents, background noise, and recording quality.
-Powerful Speaker Embeddings: The model converts any voice input into a compact vector (an "embedding") that uniquely represents the speaker's vocal characteristics. Comparing these embeddings is far more reliable than comparing raw audio features.
-Integration into the workflow:
-Enrollment: When a user registers, their recorded audio is fed into the ECAPA-TDNN model. The model outputs a unique speaker embedding vector, which is stored in the speaker_voice_profiles_v3.db database.
-Authentication: During a login attempt, a new embedding is generated from the live audio. The backend then calculates the Cosine Similarity between this new embedding and the stored one. If the score is above a confidence threshold, access is granted.
+**Why this model is used:**
+**Superior Accuracy:** The model was trained on the massive VoxCeleb dataset. It achieves an Equal Error Rate (EER) of 0.95% on the VoxCeleb1 test set, signifying extremely high accuracy. A lower EER is better.
+**Robustness:** Training on diverse data makes the model resistant to variations in accents, background noise, and recording quality.
+**Powerful Speaker Embeddings:** The model converts any voice input into a compact vector (an "embedding") that uniquely represents the speaker's vocal characteristics. Comparing these embeddings is far more reliable than comparing raw audio features.
+**Integration into the workflow:**
+**Enrollment:** When a user registers, their recorded audio is fed into the ECAPA-TDNN model. The model outputs a unique speaker embedding vector, which is stored in the speaker_voice_profiles_v3.db database.
+**Authentication:** During a login attempt, a new embedding is generated from the live audio. The backend then calculates the Cosine Similarity between this new embedding and the stored one. If the score is above a confidence threshold, access is granted.
 Project Structure
 Generated code
 .
