@@ -7,9 +7,8 @@ on:
 
 env:
   # --- Your Specific AWS Resources ---
+  # AWS_REGION is still required for AWS CLI commands
   AWS_REGION: ${{ secrets.AWS_REGION }}
-  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-  ECR_REPOSITORY: "voice-authenticator"
   CLUSTER_NAME: "fluffy-kangaroo-8g0flr"
   SERVICE_NAME: "abc-service-ecs"
   TASK_DEFINITION_FAMILY: "abc"
@@ -36,7 +35,8 @@ jobs:
 
       - name: Build, tag, and push image to ECR
         run: |
-          IMAGE_URI="${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ github.run_id }}"
+          # Use the hardcoded ECR URI directly
+          IMAGE_URI="497892281491.dkr.ecr.eu-north-1.amazonaws.com/voice-authenticator:${{ github.run_id }}"
           
           echo "Building image: $IMAGE_URI"
           docker build -t $IMAGE_URI .
@@ -44,12 +44,17 @@ jobs:
           echo "Pushing image: $IMAGE_URI"
           docker push $IMAGE_URI
           
+          # Pass the full URI to the next job
           echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
 
   deploy:
     name: Deploy to ECS
     runs-on: ubuntu-latest
     needs: build-and-push # Ensures this job runs only after build-and-push succeeds
+
+    # We need to get the IMAGE_URI from the previous job
+    outputs:
+      image_uri: ${{ steps.build-and-push.outputs.IMAGE_URI }}
 
     steps:
       - name: Configure AWS credentials
@@ -70,8 +75,10 @@ jobs:
             --output json > task.json
 
       - name: Update Task Definition with new image
+        env:
+          # Get the IMAGE_URI passed from the build job
+          NEW_IMAGE_URI: ${{ needs.build-and-push.outputs.image_uri }}
         run: |
-          NEW_IMAGE_URI="${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ github.run_id }}"
           echo "Updating task definition with image: $NEW_IMAGE_URI"
           
           cat task.json | jq --arg IMG "$NEW_IMAGE_URI" \
