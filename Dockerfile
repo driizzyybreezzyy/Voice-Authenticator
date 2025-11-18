@@ -7,6 +7,11 @@ WORKDIR /app
 # Copy the requirements file into the container at /app
 COPY requirements.txt .
 
+# --- FIX ---
+# Install build-essential (which includes gcc) BEFORE running pip install
+# This is needed to compile packages like webrtcvad
+RUN apt-get update && apt-get install -y build-essential
+
 # Install any needed packages specified in requirements.txt
 # --no-cache-dir: Disables the pip cache, making the image smaller
 # --compile: Compiles .py files to .pyc for potentially faster startup
